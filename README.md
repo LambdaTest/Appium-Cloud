@@ -73,7 +73,7 @@ Here is a list of languages and frameworks that are supported by the LambdaTest 
 
 Note: We are preparing documentation for more frameworks. If you want us to prioritize documentation of your preferred framework then feel free to give us a **shout**.
 
-# Java
+# 1. Java
 ## Tutorial To Run Your First Test On LambdaTest
 
 In this topic, you will learn how to configure and run your **Java** automation testing scripts with **Appium** on **LambdaTest Real Device Cloud platform**.
@@ -446,6 +446,431 @@ mvn compile exec:java -Dexec.mainClass=vanilla_ios -Dexec.classpathScope="test"
 Info: Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
 
 ## Additional Links
+
+- [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
+- [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
+- [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
+
+# 1.1 JUnit
+
+import CodeBlock from '@theme/CodeBlock';
+import {YOUR_LAMBDATEST_USERNAME, YOUR_LAMBDATEST_ACCESS_KEY} from "@site/src/component/keys";
+
+# Tutorial To Run Your First Test On LambdaTest
+
+In this topic, you will learn how to configure and run your **JUnit** automation testing scripts with **Appium** on **LambdaTest Real Device Cloud platform**.
+
+## Objective
+
+By the end of this topic, you will be able to:
+
+1. Run a sample automation script of **JUnit** for application testing with **Appium** on **LambdaTest**.
+2. Run test cases in **parallel** using JUnit with Appium to reduce build times.
+3. Learn more about Desired Capabilities for Appium testing.
+4. Explore advanced features of LambdaTest.
+
+**Sample Repo:** All the code samples in this documentation can be found in the :link: [LambdaTest's Repository on GitHub](https://github.com/LambdaTest/LT-appium-java-junit). You can either download or clone the repository to quickly run your tests.
+
+## Pre-requisites
+
+Before you can start performing App automation testing with Appium, you would need to follow these steps:
+
+- Make sure you have Appium’s [Java client library](https://github.com/appium/java-client) installed.
+
+### Clone The Sample Project
+
+**Step-1:** Clone the LambdaTest’s :link: [LT-appium-java-junit](https://github.com/LambdaTest/LT-appium-java-junit) repository and navigate to the code directory as shown below:
+
+```bash
+git clone https://github.com/LambdaTest/LT-appium-java-junit
+cd LT-appium-java-junit
+```
+
+### Setting Up Your Authentication
+
+Make sure you have your LambdaTest credentials with you to run test automation scripts on LambdaTest. To obtain your access credentials, [purchase a plan](https://billing.lambdatest.com/billing/plans) or access the [Automation Dashboard](https://appautomation.lambdatest.com/).
+
+**Step-2:** Set LambdaTest `Username` and `Access Key` in environment variables.
+
+**For Linux/macOS:**
+  {`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
+export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+ 
+ **For Windows:**
+  {`set LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \`
+set LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+  
+### Upload Your Application
+
+**Step-3:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+**Using App File:**
+<Tabs className="docs__val" groupId="os">
+<TabItem value="macos" label="Linux / MacOS" default>
+
+<div className="lambdatest__codeblock">
+<CodeBlock className="language-bash">
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
+`}
+</CodeBlock>
+</div>
+
+</TabItem>
+
+<TabItem value="windows" label="Windows" default>
+<div className="lambdatest__codeblock">
+<CodeBlock className="language-powershell">
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
+</CodeBlock>
+</div>
+</TabItem>
+</Tabs>
+
+**Using App URL:**
+<Tabs className="docs__val" groupId="os">
+<TabItem value="macos" label="Linux / MacOS" default>
+
+<div className="lambdatest__codeblock">
+<CodeBlock className="language-bash">
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
+</CodeBlock>
+</div>
+
+</TabItem>
+
+<TabItem value="windows" label="Windows" default>
+<div className="lambdatest__codeblock">
+<CodeBlock className="language-powershell">
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
+</CodeBlock>
+</div>
+</TabItem>
+</Tabs>
+
+:::tip
+
+- If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
+- Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
+
+:::
+
+## Run Your First Test
+
+---
+
+### Sample Test With JUnit
+
+Here are sample JUnit automation scripts used to run on an Android app and iOS app. Ensure to update the `app_url` in the code scripts before running the tests.
+
+<Tabs className="docs__val">
+<TabItem value="android" label="Android" default>
+
+```java title="android.java"
+package com.lambdatest;
+
+import io.appium.java_client.MobileBy;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.By;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class android {
+    String username = System.getenv("LT_USERNAME") == null ? "LT_USERNAME" //Enter the Username here
+            : System.getenv("LT_USERNAME");
+    String accessKey = System.getenv("LT_ACCESS_KEY") == null ? "LT_ACCESS_KEY"  //Enter the Access key here
+            : System.getenv("LT_ACCESS_KEY");
+    public static RemoteWebDriver driver = null;
+    public String gridURL = "@beta-hub.lambdatest.com/wd/hub";
+    public String status = "passed";
+    @Before
+    public void setUp() throws Exception {
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        capabilities.setCapability("build", "JUNIT Native App automation");
+        capabilities.setCapability("name", "Java JUnit Android Pixel 6");
+        capabilities.setCapability("platformName", "android");
+        capabilities.setCapability("deviceName", "Pixel 6"); //Enter the name of the device here
+        capabilities.setCapability("isRealMobile", true);
+        capabilities.setCapability("platformVersion","12");
+        capabilities.setCapability("app","YOUR_APP_URL"); //Enter the App ID here
+        capabilities.setCapability("deviceOrientation", "PORTRAIT");
+        capabilities.setCapability("console",true);
+        capabilities.setCapability("network",true);
+        capabilities.setCapability("visual",true);
+        try
+        {
+            driver = new RemoteWebDriver(new URL("https://" + username + ":" + accessKey + gridURL), capabilities);
+        }
+        catch (MalformedURLException e)
+        {
+            System.out.println("Invalid grid URL");
+        } catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSimple() throws Exception
+    {
+        try
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("color"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("geoLocation"))).click();;
+            Thread.sleep(5000);
+            driver.navigate().back();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("Text"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("notification"))).click();;
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("toast"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("Browser"))).click();;
+            Thread.sleep(10000);
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("url"))).sendKeys("https://www.lambdatest.com/");
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("find"))).click();
+            Thread.sleep(5000);
+            driver.navigate().back();
+
+            status="passed";
+        }
+            catch (Exception e)
+             {
+                System.out.println(e.getMessage());
+                status="failed";
+             }
+    }
+    @After
+    public void tearDown() throws Exception
+    {
+        if (driver != null)
+        {
+            driver.executeScript("lambda-status=" + status);
+            driver.quit();
+        }
+    }
+}
+```
+
+</TabItem>
+
+<TabItem value="ios" label="iOS" default>
+
+```java title="ios.java"
+package com.lambdatest;
+
+import io.appium.java_client.MobileBy;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.By;
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class ios {
+    String username = System.getenv("LT_USERNAME") == null ? "LT_USERNAME"   //Enter the Username here
+            : System.getenv("LT_USERNAME");
+    String accessKey = System.getenv("LT_ACCESS_KEY") == null ? "LT_ACCESS_KEY"   //Enter the Access key here
+            : System.getenv("LT_ACCESS_KEY");
+    public static RemoteWebDriver driver = null;
+    public String gridURL = "@beta-hub.lambdatest.com/wd/hub";
+    public String status = "passed";
+    @Before
+    public void setUp() throws Exception {
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        capabilities.setCapability("build", "JUNIT Native App automation");
+        capabilities.setCapability("name", "Java JUnit iOS iPhone 12");
+        capabilities.setCapability("platformName", "ios");
+        capabilities.setCapability("deviceName", "iPhone 12");
+        capabilities.setCapability("isRealMobile", true);
+        capabilities.setCapability("platformVersion","15");
+        capabilities.setCapability("app","YOUR_APP_URL"); //Enter the APP_ID here
+        capabilities.setCapability("deviceOrientation", "PORTRAIT");
+        capabilities.setCapability("console",true);
+        capabilities.setCapability("network",true);
+        capabilities.setCapability("visual",true);
+        try
+        {
+            driver = new RemoteWebDriver(new URL("https://" + username + ":" + accessKey + gridURL), capabilities);
+        }
+        catch (MalformedURLException e)
+        {
+            System.out.println("Invalid grid URL");
+        } catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testSimple() throws Exception
+    {
+        try
+        {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("color"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("geoLocation"))).click();
+            Thread.sleep(5000);
+            driver.navigate().back();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("Text"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("notification"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("toast"))).click();
+
+            wait.until(ExpectedConditions.elementToBeClickable(By.id("Browser"))).click();
+            Thread.sleep(10000);
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("url"))).sendKeys("https://www.lambdatest.com/");;
+
+            wait.until(ExpectedConditions.elementToBeClickable(MobileBy.id("find"))).click();
+            Thread.sleep(5000);
+            driver.navigate().back();
+
+            status="passed";
+        }
+            catch (Exception e)
+             {
+                System.out.println(e.getMessage());
+                status="failed";
+             }
+    }
+    @After
+    public void tearDown() throws Exception
+    {
+        if (driver != null)
+        {
+            driver.executeScript("lambda-status=" + status);
+            driver.quit();
+        }
+    }
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+### Configuring Your Test Capabilities
+
+**Step-4:** You can update your custom capabilities in test scripts. In this sample project, we are passing platform name, platform version, device name and app url (generated earlier) along with other capabilities like build name and test name via capabilities object. The capabilities object in the sample code are defined as:
+
+<Tabs className="docs__val">
+<TabItem value="android-config" label="Android" default>
+
+```java
+DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        capabilities.setCapability("build", "JUNIT Native App automation");
+        capabilities.setCapability("name", "Java JUnit Android Pixel 6");
+        capabilities.setCapability("platformName", "android");
+        capabilities.setCapability("deviceName", "Pixel 6"); //Enter the name of the device here
+        capabilities.setCapability("isRealMobile", true);
+        capabilities.setCapability("platformVersion","12");
+        capabilities.setCapability("app","YOUR_APP_URL"); //Enter the App ID here
+        capabilities.setCapability("deviceOrientation", "PORTRAIT");
+        capabilities.setCapability("console",true);
+        capabilities.setCapability("network",true);
+        capabilities.setCapability("visual",true);
+```
+
+</TabItem>
+
+<TabItem value="ios-config" label="iOS" default>
+
+```java
+DesiredCapabilities capabilities = new DesiredCapabilities();
+
+        capabilities.setCapability("build", "JUNIT Native App automation");
+        capabilities.setCapability("name", "Java JUnit iOS iPhone 12");
+        capabilities.setCapability("platformName", "ios");
+        capabilities.setCapability("deviceName", "iPhone 12");
+        capabilities.setCapability("isRealMobile", true);
+        capabilities.setCapability("platformVersion","15");
+        capabilities.setCapability("app","YOUR_APP_URL"); //Enter the APP_ID here
+        capabilities.setCapability("deviceOrientation", "PORTRAIT");
+        capabilities.setCapability("console",true);
+        capabilities.setCapability("network",true);
+        capabilities.setCapability("visual",true);
+```
+
+</TabItem>
+
+</Tabs>
+
+:::info Note
+
+- You must add the generated **APP_URL** to the `"app"` capability in the config file.
+- You can generate capabilities for your test requirements with the help of our inbuilt **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/).
+
+:::
+
+### Executing The Test
+
+**Step-5:** Execute the following commands to install the required dependencies:
+
+```bash
+mvn clean
+```
+
+**Step-6:** The tests can be executed in the terminal using the following command:
+
+<Tabs className="docs__val">
+<TabItem value="android-exec" label="Android" default>
+
+```bash
+mvn test android.java
+```
+
+</TabItem>
+
+<TabItem value="ios-exec" label="iOS" default>
+
+```bash
+mvn test ios.java
+```
+
+</TabItem>
+</Tabs>
+
+:::info
+Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
+:::
+
+## Additional Links
+
+---
 
 - [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
 - [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
