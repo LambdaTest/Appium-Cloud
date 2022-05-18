@@ -76,13 +76,9 @@ Note: We are preparing documentation for more frameworks. If you want us to prio
 # Java
 ## Tutorial To Run Your First Test On LambdaTest
 
----
-
 In this topic, you will learn how to configure and run your **Java** automation testing scripts with **Appium** on **LambdaTest Real Device Cloud platform**.
 
 ## Objective
-
----
 
 By the end of this topic, you will be able to:
 
@@ -90,13 +86,9 @@ By the end of this topic, you will be able to:
 2. Learn more about Desired Capabilities for Appium testing.
 3. Explore advanced features of LambdaTest.
 
-:::tip Sample Repo
-All the code samples in this documentation can be found in the :link: [LambdaTest's Repository on GitHub](https://github.com/LambdaTest/LT-appium-java). You can either download or clone the repository to quickly run your tests.
-:::
+Sample Repo: All the code samples in this documentation can be found in the :link: [LambdaTest's Repository on GitHub](https://github.com/LambdaTest/LT-appium-java). You can either download or clone the repository to quickly run your tests.
 
 ## Pre-requisites
-
----
 
 Before you can start performing App automation testing with Appium, you would need to follow these steps:
 
@@ -118,97 +110,53 @@ Make sure you have your LambdaTest credentials with you to run test automation s
 
 **Step-2:** Set LambdaTest `Username` and `Access Key` in environment variables.
 
-<Tabs className="docs__val">
+**For Linux/macOS:**
 
-<TabItem value="bash" label="Linux / MacOS" default>
+`{`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
+export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"`
+ 
+**For Windows:**
 
-  <div className="lambdatest__codeblock">
-    <CodeBlock className="language-bash">
-  {`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
-export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
-  </CodeBlock>
-</div>
-
-</TabItem>
-
-<TabItem value="powershell" label="Windows" default>
-
-  <div className="lambdatest__codeblock">
-    <CodeBlock className="language-powershell">
   {`set LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \`
 set LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
-  </CodeBlock>
-</div>
-
-</TabItem>
-</Tabs>
-
+ 
 ### Upload Your Application
 
 **Step-3:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
-
 **Using App File:**
-<Tabs className="docs__val" groupId="os">
-<TabItem value="macos" label="Linux / MacOS" default>
 
-<div className="lambdatest__codeblock">
-<CodeBlock className="language-bash">
+**Linux/macOS:**
+
 {`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
 --location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
 --form 'name="Android_App"' \\
 --form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
 `}
-</CodeBlock>
-</div>
 
-</TabItem>
+**Windows:**
 
-<TabItem value="windows" label="Windows" default>
-<div className="lambdatest__codeblock">
-<CodeBlock className="language-powershell">
 {`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
-</CodeBlock>
-</div>
-</TabItem>
-</Tabs>
 
 **Using App URL:**
-<Tabs className="docs__val" groupId="os">
-<TabItem value="macos" label="Linux / MacOS" default>
 
-<div className="lambdatest__codeblock">
-<CodeBlock className="language-bash">
+**Linux/macOS:**
+
 {`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
 --location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
 --form 'name="Android_App"' \\
 --form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
-</CodeBlock>
-</div>
 
-</TabItem>
+**Windows:**
 
-<TabItem value="windows" label="Windows" default>
-<div className="lambdatest__codeblock">
-<CodeBlock className="language-powershell">
 {`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
-</CodeBlock>
-</div>
-</TabItem>
-</Tabs>
 
-:::tip
+Tip: 
 
 - If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
 - Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
 
-:::
-
 ## Run Your First Test
-
----
 
 ### Sample Test With Java
 
@@ -462,12 +410,10 @@ DesiredCapabilities caps = new DesiredCapabilities();
 
 </Tabs>
 
-:::info Note
+Note:
 
 - You must add the generated **APP_URL** to the `"app"` capability in the config file.
 - You can generate capabilities for your test requirements with the help of our inbuilt **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/).
-
-:::
 
 ### Executing The Test
 
@@ -479,31 +425,21 @@ mvn clean install
 
 **Step-6:** The tests can be executed in the terminal using the following command:
 
-<Tabs className="docs__val">
-<TabItem value="android-exec" label="Android" default>
+**Android:**
 
 ```bash
 mvn compile exec:java -Dexec.mainClass=vanilla_android -Dexec.classpathScope="test"
 ```
 
-</TabItem>
-
-<TabItem value="ios-exec" label="iOS" default>
+**iOS:**
 
 ```bash
 mvn compile exec:java -Dexec.mainClass=vanilla_ios -Dexec.classpathScope="test"
 ```
 
-</TabItem>
-</Tabs>
-
-:::info
-Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
-:::
+Info: Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
 
 ## Additional Links
-
----
 
 - [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
 - [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
