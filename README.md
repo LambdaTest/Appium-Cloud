@@ -3608,3 +3608,47 @@ LambdaTest provides the capabilities class needed to run your App Automation lev
 **Got any questions?**
 
 Please reach out at our **24x7 Chat Support** or you could also mail us at [support@lambdatest.com](https://support.lambdatest.com/).
+	
+# Testing Locally Hosted Apps For App Automation
+
+Using the LambdaTest tunnel, you can test locally and privately hosted apps across various real Android and iOS devices on the LambdaTest Appium test automation platform. LambdaTest tunnel uses protocols like **Web Socket, HTTPS, SSH (Secure Shell)** and more to let you build a secure and unique tunnel connection between your local system and LambdaTest cloud servers.
+
+In this documentation, learn how to configure LambdaTest tunnel to test locally or privately hosted apps while performing mobile app automation.
+
+To test apps locally, you will need to configure:
+
+1. Connection with LambdaTest tunnel.
+
+2. Test scripts to run via LambdaTest tunnel.
+
+## Setting Up Connection With LambdaTest Tunnel
+
+Shown below are the steps to configure the connection with LambdaTest tunnel.
+
+1. Download the binary file based on your operating system.
+
+- Windows **[64 Bit](https://downloads.lambdatest.com/tunnel/v3/windows/64bit/LT_Windows.zip) | [32 Bit](https://downloads.lambdatest.com/tunnel/v3/windows/32bit/LT_Windows.zip)**
+- macOS **[64 Bit](https://downloads.lambdatest.com/tunnel/v3/mac/64bit/LT_Mac.zip) | [32 Bit](https://downloads.lambdatest.com/tunnel/v3/mac/32bit/LT_Mac.zip)**
+- Linux **[64 Bit](https://downloads.lambdatest.com/tunnel/v3/linux/64bit/LT_Linux.zip) | [32 Bit](https://downloads.lambdatest.com/tunnel/v3/linux/32bit/LT_Linux.zip)**
+
+2. Extract the downloaded binary file.
+
+3. Navigate to the Command Prompt and point to the directory/folder where you extracted the binary file.
+
+4. Run the below command in the terminal.
+
+```js
+./LT --user {user's login email} --key {user's access key} --tunnelName {user's tunnel name}
+```
+
+## Configuring Test Scripts
+
+After configuring the connection with LambdaTest tunnel, you will need to set the capability `tunnel` to `True`.
+
+| Key    | Values     | Description          | Desired Capability |
+| ------ | ---------- | -------------------- | ------------------ |
+| tunnel | true/false | Configure the tunnel | `"tunnel" : True,` |
+
+You can also add the `tunnel` capability using LambdaTest Capability Generator.
+
+In case you have any questions or need any additional information, drop them at our **24X7 Chat Support** or mail us directly at support@lambdatest.com.
