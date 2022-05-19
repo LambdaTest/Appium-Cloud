@@ -3227,7 +3227,7 @@ By the end of this topic, you will be able to:
 
 Before you can start performing App automation testing with Appium, you have to set up Visual Studio:
 
-<img loading="lazy" src={require('../assets/images/app-automation/csharp-1.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
+<img loading="lazy" src={require('../assets-gh/images/app-automation/csharp-1.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
 
 - Clone/Download the Github Repository.
 
@@ -3554,7 +3554,7 @@ namespace csharp_appium
 
 Click the **Play** icon to run the test.
 
-<img loading="lazy" src={require('../assets/images/app-automation/csharp-2.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
+<img loading="lazy" src={require('../assets-gh/images/app-automation/csharp-2.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
 
 **Info:** Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
 
