@@ -3227,7 +3227,7 @@ By the end of this topic, you will be able to:
 
 Before you can start performing App automation testing with Appium, you have to set up Visual Studio:
 
-<img loading="lazy" src={require('../assets-gh/images/app-automation/csharp-1.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
+![This is an image](https://www.lambdatest.com/assets-gh/csharp.png) 
 
 - Clone/Download the Github Repository.
 
