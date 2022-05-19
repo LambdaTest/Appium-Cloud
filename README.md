@@ -2055,3 +2055,1511 @@ behave --tags @androidApp
 - [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
 - [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
 - [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
+
+# 3.2 Robot With Appium
+# Tutorial To Run Your First Test On LambdaTest
+
+In this topic, you will learn how to configure and run your **Robot** automation testing scripts with **Appium** on **LambdaTest Real Device Cloud platform**.
+
+## Objective
+
+By the end of this topic, you will be able to:
+
+1. Run a sample automation script of **Robot** for application testing with **Appium** on **LambdaTest**.
+2. Learn more about Desired Capabilities for Appium testing.
+3. Explore advanced features of LambdaTest.
+
+**Sample Repo:** All the code samples in this documentation can be found in the :link: [LambdaTest's Repository on GitHub](https://github.com/LambdaTest/LT-appium-python-robot). You can either download or clone the repository to quickly run your tests.
+
+## Pre-requisites
+
+Before you can start performing App automation testing with Appium, you would need to follow these steps:
+
+- Install the latest stable Python build from the [official website](https://www.python.org/downloads/).
+- Make sure **pip** is installed in your system. You can install **pip** from [here](https://pip.pypa.io/en/stable/installation/).
+
+### Clone The Sample Project
+
+**Step-1:** Clone the LambdaTest’s :link: [LT-appium-python-robot](https://github.com/LambdaTest/LT-appium-python-robot) repository and navigate to the code directory as shown below:
+
+```bash
+git clone https://github.com/LambdaTest/LT-appium-python-robot
+cd LT-appium-python-robot
+```
+
+### Setting Up Your Authentication
+
+Make sure you have your LambdaTest credentials with you to run test automation scripts on LambdaTest. To obtain your access credentials, [purchase a plan](https://billing.lambdatest.com/billing/plans) or access the [Automation Dashboard](https://appautomation.lambdatest.com/).
+
+**Step-2:** Replace LambdaTest `username` and `accesskey` in the `common.robot` file as mentioned below:
+
+```js title="common.robot"
+*** Settings ***
+Library  AppiumLibrary
+
+*** Variables ***
+// highlight-start
+${username}         username
+${accesskey}        accesskey
+// highlight-end
+${REMOTE_URL}       https://${username}:${accesskey}@mobile-hub.lambdatest.com/wd/hub
+${TIMEOUT}          3000
+
+*** Keywords ***
+Open test app
+    Open Application  ${REMOTE_URL}  platformName=${platform}  platformVersion=${version}  deviceName=${deviceName}  visual=${visual}  network=${network}  isRealMobile=${isRealMobile}   app=${app}   name=Robot Framework Sample Test    build=Appium Python Robot
+
+Close test app
+    Close Application
+```
+
+### Upload Your Application
+
+**Step-3:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
+
+**Using App File:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
+`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
+
+**Using App URL:**
+
+**For Linux/macOS:**
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
+
+**Tip:**
+
+- If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
+- Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
+
+## Run Your First Test
+
+### Sample Test With Robot
+
+To get started, here is an example of sample test on our sample Android and iOS App shown below. You can write or add your own Appium automation scripts in `*StepDef.py` directory to run different tests on your app.
+
+<Tabs className="docs__val">
+
+<TabItem value="android-script" label="Android" default>
+
+```python title="Android.robot"
+*** Settings ***
+
+Resource  ../Resources/Common.robot
+
+Test Setup  Common.Open test app
+Test Teardown  Common.Close test app
+
+*** Variables ***
+${TIMEOUT}          3000
+
+*** Test Cases ***
+
+Example of connecting to Lambdatest via Robot Framework
+	[Timeout]   ${TIMEOUT}
+	Click element  id=color
+	Click element  id=Text
+	Click element  id=toast
+
+	Click element  id=notification
+	Click element  id=geoLocation
+	Sleep	2 seconds
+	Click element  id=Home
+	Sleep	2 seconds
+	Click element  id=speedTest
+	Sleep	2 seconds
+
+	Click element  id=Browser
+	Input Text   id=url	https://lambdatest.com
+	Click element  id=find
+
+```
+
+</TabItem>
+<TabItem value="ios-script" label="iOS" default>
+
+```python title="IOS.robot"
+*** Settings ***
+
+Resource  ../Resources/Common.robot
+
+Test Setup  Common.Open test app
+Test Teardown  Common.Close test app
+
+*** Variables ***
+${TIMEOUT}          3000
+
+*** Test Cases ***
+
+Example of connecting to Lambdatest via Robot Framework
+	[Timeout]   ${TIMEOUT}
+	Click element  id=color
+	Click element  id=Text
+	Click element  id=toast
+	Click element  id=notification
+	Click element  id=geoLocation
+
+
+```
+
+</TabItem>
+
+</Tabs>
+
+### Configuring Your Test Capabilities
+
+**Step-4:** You need to update your capabilities in `Makefile` files. In this sample project, we have provided the examples for running tests on both **Android** and **iOS** apps. We are passing platform name, platform version, device name and app url (generated earlier) along with other capabilities like build name and test name via capabilities object. The capabilities object in the sample code for a single test are defined as:
+
+```python title="Makefile"
+test_Android1:
+	robot --variable version:10 --variable platform:Android --variable deviceName:"Galaxy S20" --variable isRealMobile:true --variable visual:true --variable network:false --variable console:false --variable app:"lt://" Tests/Android.robot
+
+test_iOS1:
+	robot --variable version:14 --variable platform:iOS --variable deviceName:"iPhone 11" --variable isRealMobile:true --variable visual:true --variable network:false --variable console:false --variable app:"lt://" Tests/IOS.robot
+```
+
+**Info Note:**
+
+- You must add the generated **APP_URL** to the `"app"` capability in the config file.
+- You can generate capabilities for your test requirements with the help of our inbuilt :link: **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here :page_facing_up:](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/) .
+
+### Executing The Tests
+
+**Step-5:** Run the following command in the directory to install the relevant dependencies.
+
+```bash
+pip install -r requirements.txt
+```
+
+**Step-6:** Execute the following command to run your test on LambdaTest platform:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+```bash
+make test_iOS1
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+```bash
+make test_Android1
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info:** Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
+
+## Additional Links
+
+- [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
+- [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
+- [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
+
+# 4. Ruby With Appium
+# Tutorial To Run Your First Test On LambdaTest
+
+This article will guide you in getting started with configuring and running your Ruby-based Appium automation test scripts on the **LambdaTest Real Device Cloud Platform**.
+
+## Objective
+
+1.  Set up an environment for testing your Apps using **Ruby** with **Appium**.
+2.  Understand and configure the core capabilities required for your Appium test suite.
+3.  Explore the advanced features of LambdaTest.
+
+**Sample repo:** All the code samples in this documentation can be found in the [LambdaTest's Repository](https://github.com/LambdaTest/LT_Ruby_Appium) on GitHub. You can either **download** or **clone** the repository to quickly run your tests.
+
+## Pre-requisites
+
+Before you can start performing Ruby automation testing with Selenium, you would need to:
+
+- Install **Ruby** and **gem** on your local system. Follow these instructions to install on different operating systems.
+
+  - For **Windows**, you can download from the [official website](https://rubyinstaller.org/downloads/).
+  - For **Linux** or **Ubuntu**, you can run a simple apt command like below:
+
+    ```bash
+    sudo apt-get install ruby-full
+    ```
+
+  - For **macOS**, you can run a [Homebrew](https://brew.sh/) command like this:
+
+    ```bash
+    brew install ruby
+    ```
+
+- Ensure you have Dependency manager **bundler** installed. If not installed, you can install with the following command -
+
+  ```
+  gem install bundler
+  ```
+
+### Clone The Sample Project
+
+**Step-1:** Clone the LambdaTest’s [LT_Ruby_Appium](https://github.com/LambdaTest/LT_Ruby_Appium) and navigate to the code directory as shown below:
+
+```bash
+git clone https://github.com/LambdaTest/LT_Ruby_Appium
+cd LT_Ruby_Appium
+```
+
+### Setting Up Your Authentication
+
+Make sure you have your LambdaTest credentials with you to run test automation scripts on LambdaTest. To obtain your access credentials, [purchase a plan](https://billing.lambdatest.com/billing/plans) or access the [Automation Dashboard](https://appautomation.lambdatest.com/).
+
+**Step-2:** Set LambdaTest `Username` and `Access Key` in environment variables.
+
+**For Linux/macOS:**
+
+  {`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
+export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+ 
+ **For Windows:**
+ 
+  {`set LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \`
+set LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+  
+### Upload Your Application
+
+**Step-3:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
+
+**Using App File:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
+`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
+
+**Using App URL:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
+
+**Tip:**
+
+- If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
+- Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
+
+## Run Your Sample Test
+
+### Sample Test With Ruby
+
+An automation script for the sample application available above has been provided here. Ensure to update the `app_url` in the below script before running the test.
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+```ruby title="ios.py"
+require 'rubygems'
+require 'appium_lib'
+
+        username= "User_Name"
+        accessToken= "Access_Key"
+
+        caps = {
+            "LT:Options" => {
+                "deviceName" => "iPhone 13 Pro",
+                "platformName" => "iOS",
+                "platformVersion" => "15",
+                "isRealMobile" => true,
+                "app" => "lt://APP100201841648802848885579",
+                "w3c" => true,
+        } }
+
+        appium_driver = Appium::Driver.new({
+            'caps' => caps,
+            'appium_lib' => {
+                :server_url => "https://#{username}:#{accessToken}@beta-hub.lambdatest.com/wd/hub"
+            }}, true)
+
+            driver = appium_driver.start_driver
+
+            wait = Selenium::WebDriver::Wait.new(:timeout => 30)
+
+            el1 = driver.find_element(:id, "color")
+            el1.click
+            el2 = driver.find_element(:id, "geoLocation")
+            el2.click
+            sleep(5)
+            driver.back
+            el3 = driver.find_element(:id, "Text")
+            el3.click
+            el4 = driver.find_element(:id, "notification")
+            el4.click
+            el5 = driver.find_element(:id, "Toast")
+            el5.click
+            el6 = driver.find_element(:id, "speedTest")
+            el6.click
+            sleep(10)
+            driver.back
+
+            puts "Found results - Test Passed"
+
+
+            driver.quit
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+```ruby title="android.py"
+require 'rubygems'
+require 'appium_lib'
+
+        username= "username"
+        accessToken= "accesskey"
+
+        caps = {
+            "LT:Options" => {
+            "deviceName" => "Galaxy S21",
+            "platformName" => "Android",
+            "platformVersion" => "11",
+            "isRealMobile" => true,
+            "app" => "lt://app_url",
+            "w3c" => true,
+        } }
+
+        appium_driver = Appium::Driver.new({
+            'caps' => caps,
+            'appium_lib' => {
+                :server_url => "https://#{username}:#{accessToken}@beta-hub.lambdatest.com/wd/hub"
+            }}, true)
+
+            driver = appium_driver.start_driver
+
+            wait = Selenium::WebDriver::Wait.new(:timeout => 30)
+            el1 = driver.find_element(:id, "com.lambdatest.proverbial:id/color")
+            el1.click
+            el2 = driver.find_element(:id, "com.lambdatest.proverbial:id/geoLocation")
+            el2.click
+            sleep(5)
+            driver.back
+            el3 = driver.find_element(:id, "com.lambdatest.proverbial:id/Text")
+            el3.click
+            el4 = driver.find_element(:id, "com.lambdatest.proverbial:id/notification")
+            el4.click
+            el5 = driver.find_element(:id, "com.lambdatest.proverbial:id/toast")
+            el5.click
+            el6 = driver.find_element(:id, "com.lambdatest.proverbial:id/speedTest")
+            el6.click
+            sleep(10)
+            driver.back
+            el7 = driver.find_element(:id, "webview")
+            el7.click
+            sleep(5)
+            el9 = driver.find_element(:id, "com.lambdatest.proverbial:id/url")
+            el9.click
+            el9.send_keys "https://www.lambdatest.com/"
+            el10 = driver.find_element(:id, "com.lambdatest.proverbial:id/find")
+            el10.click
+            sleep(5)
+            driver.back
+
+            puts "Found results - Test Passed"
+
+            driver.quit
+```
+
+</TabItem>
+</Tabs>
+
+### Configuring Your Test Capabilities
+
+**Step-4:** You can update your custom capabilities in test scripts. In this sample project, we are passing platform name, platform version, device name and app url (generated earlier) along with other capabilities like build name and test name via capabilities object. The capabilities object in the sample code are defined as:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios-config" label="iOS" default>
+
+```ruby title="iOS(.ipa)"
+ caps = {
+            "LT:Options" => {
+                "deviceName" => "iPhone 13 Pro",
+                "platformName" => "iOS",
+                "platformVersion" => "15",
+                "isRealMobile" => true,
+                "app" => "lt://APP100201841648802848885579",
+                "w3c" => true,
+        } }
+```
+
+</TabItem>
+<TabItem value="android-config" label="Android" default>
+
+```ruby title="Android(.apk)"
+caps = {
+            "LT:Options" => {
+            "deviceName" => "Galaxy S21",
+            "platformName" => "Android",
+            "platformVersion" => "11",
+            "isRealMobile" => true,
+            "app" => "lt://APP10020521645537467103592",
+            "w3c" => true,
+        } }
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info Note:**
+
+- You must add the generated **APP_URL** to the `"app"` capability in the config file.
+- You can generate capabilities for your test requirements with the help of our inbuilt **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/).
+
+### Executing The Tests
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+If you are using an **iOS** app, the cURL command will generate an app URL for the corresponding iOS app and install the same for running the tests. You can either use our sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa) or upload your own app as discussed earlier.
+
+**Step-5:** Navigate to the corresponding directory based on your app.
+
+```bash
+cd ios
+```
+
+**Step-6:** Execute the following command to run your test on LambdaTest platform:
+
+```bash
+bundle exec rake first
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+If you are using an **android** app, the cURL command will generate an app URL for the corresponding Android app and install the same for running the tests. You can either use our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or upload your own app as discussed earlier.
+
+**Step-5:** Navigate to the corresponding directory based on your app.
+
+```bash
+cd android
+```
+
+**Step-6:** Execute the following command to run your test on LambdaTest platform:
+
+```bash
+bundle exec rake first
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info:** Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
+
+## Additional Links
+
+- [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
+- [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
+- [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
+
+# 4.1 Cucumber With Appium
+# Tutorial To Run Your First Test On LambdaTest
+
+This article will guide you in getting started with configuring and running your Ruby:Cucumber-based Appium automation test scripts on the **LambdaTest Real Device Cloud Platform**.
+
+## Objective
+
+1.  Set up an environment for testing your Apps using **Cucumber** with **Appium**.
+2.  Understand and configure the core capabilities required for your Appium test suite.
+3.  Explore the advanced features of LambdaTest.
+
+**Sample repo:** All the code samples in this documentation can be found in the [LambdaTest's Repository](https://github.com/LambdaTest/LT-appium-ruby-cucumber) on GitHub. You can either **download** or **clone** the repository to quickly run your tests.
+
+## Pre-requisites
+
+Before you can start performing Ruby automation testing with Selenium, you would need to:
+
+- Install **Ruby** and **gem** on your local system. Follow these instructions to install on different operating systems.
+
+  - For **Windows**, you can download from the [official website](https://rubyinstaller.org/downloads/).
+  - For **Linux** or **Ubuntu**, you can run a simple apt command like below:
+
+    ```bash
+    sudo apt-get install ruby-full
+    ```
+
+  - For **macOS**, you can run a [Homebrew](https://brew.sh/) command like this:
+
+    ```bash
+    brew install ruby
+    ```
+
+- Ensure you have Dependency manager **bundler** installed. If not installed, you can install with the following command -
+
+  ```
+  gem install bundler
+  ```
+
+### Clone The Sample Project
+
+**Step-1:** Clone the LambdaTest’s [LT_Ruby_Appium](https://github.com/LambdaTest/LT-appium-ruby-cucumber) and navigate to the code directory as shown below:
+
+```bash
+git clone https://github.com/LambdaTest/LT-appium-ruby-cucumber
+cd LT-appium-ruby-cucumber
+```
+
+### Setting Up Your Authentication
+
+Make sure you have your LambdaTest credentials with you to run test automation scripts on LambdaTest. To obtain your access credentials, [purchase a plan](https://billing.lambdatest.com/billing/plans) or access the [Automation Dashboard](https://appautomation.lambdatest.com/).
+
+**Step-2:** Set LambdaTest `Username` and `Access Key` in environment variables.
+
+**For Linux/macOS:**
+
+  {`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
+export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+  
+**For Windows:**
+
+  {`set LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \`
+set LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+  
+### Upload Your Application
+
+**Step-3:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
+
+**Using App File:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
+`}
+
+**For Windows;**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
+
+**Using App URL:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
+
+**Tip:**
+
+- If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
+- Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
+
+## Run Your Sample Test
+
+### Sample Test With Ruby
+
+The file **first_steps.rb** defines the script that the test should follow:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+```ruby title="first_steps.rb"
+When /^I try to Click on color using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "color").displayed?}
+  $driver.find_element(:accessibility_id, "color").click
+end
+When /^I try to Click on Text using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "Text").displayed?}
+  $driver.find_element(:accessibility_id, "Text").click
+end
+When /^I try to Click on toast using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "toast").displayed?}
+  $driver.find_element(:accessibility_id, "toast").click
+end
+When /^I try to Click on Notification using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "notification").displayed?}
+  $driver.find_element(:accessibility_id, "notification").click
+  sleep 5
+end
+When /^I try to Click on geoLocation using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "geoLocation").displayed?}
+  $driver.find_element(:accessibility_id, "geoLocation").click
+  sleep 5
+  $driver.back
+end
+When /^I try to Click on speedTest using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "speedTest").displayed?}
+  $driver.find_element(:accessibility_id, "speedTest").click
+  sleep 5
+  $driver.back
+end
+When /^I try to Click on Browser using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "Browser").displayed?}
+  $driver.find_element(:accessibility_id, "Browser").click
+end
+When /^I try to Click on url using proverbial_ios App/ do
+  $wait.until {$driver.find_element(:accessibility_id, "url").displayed?}
+  $driver.find_element(:accessibility_id, "url").click
+end
+When("I type in {string}") do |search_keyword|
+  $wait.until { $driver.find_element(:accessibility_id, "url").displayed? }
+  search_box = $driver.find_element(:accessibility_id, "url")
+  search_box.send_key(search_keyword)
+  $wait.until {$driver.find_element(:accessibility_id, "find").displayed?}
+  $driver.find_element(:accessibility_id, "find").click
+  sleep 5
+end
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+```ruby title="first_steps.rb"
+When /^I try to Click on color using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/color").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/color").click
+end
+
+When /^I try to Click on Text using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/Text").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/Text").click
+end
+
+When /^I try to Click on toast using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/toast").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/toast").click
+end
+
+When /^I try to Click on Notification using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/notification").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/notification").click
+  sleep 5
+end
+
+When /^I try to Click on geoLocation using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/geoLocation").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/geoLocation").click
+  sleep 5
+  $driver.back
+end
+
+When /^I try to Click on speedTest using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/speedTest").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/speedTest").click
+  sleep 5
+  $driver.back
+end
+
+When /^I try to Click on Browser using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/Browser").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/Browser").click
+end
+
+When /^I try to Click on url using proverbial_android App/ do
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/url").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/url").click
+end
+
+When("I type in {string}") do |search_keyword|
+  $wait.until { $driver.find_element(:id, "com.lambdatest.proverbial:id/url").displayed? }
+  search_box = $driver.find_element(:id, "com.lambdatest.proverbial:id/url")
+  search_box.send_key(search_keyword)
+  $wait.until {$driver.find_element(:id, "com.lambdatest.proverbial:id/find").displayed?}
+  $driver.find_element(:id, "com.lambdatest.proverbial:id/find").click
+  sleep 5
+end
+
+Then /^I should see results$/ do
+  $driver.find_elements(:class, "android.widget.TextView").size.should > 0
+end
+```
+
+</TabItem>
+</Tabs>
+
+### Configuring Your Test Capabilities
+
+**Step-4:** You can update your custom capabilities in test scripts. In this sample project, we are passing platform name, platform version, device name and app url (generated earlier) along with other capabilities like build name and test name via capabilities object. The capabilities object in the sample code are defined as:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios-config" label="iOS" default>
+
+```ruby title="iOS(.ipa)"
+server: "beta-hub.lambdatest.com"
+
+common_caps:
+  "user": "LAMBDATEST_USERNAME"
+  "accessKey": "LAMBDATEST_ACCESS_KEY"
+  "project": "First Cucumber Android Project"
+  "build": "build-1"
+
+
+browser_caps:
+  -
+    "platformName": "iOS"
+    "platformVersion": "12.0"
+    "deviceName": "iPhone 8"
+    "app": "YOUR_APP_URL"
+    "name": "first_test"
+    "isRealMobile": "true"
+```
+
+</TabItem>
+<TabItem value="android-config" label="Android" default>
+
+```ruby title="Android(.apk)"
+server: "beta-hub.lambdatest.com"
+
+common_caps:
+  "user": "LAMBDATEST_USERNAME"
+  "accessKey": "LAMBDATEST_ACCESS_KEY"
+  "project": "First Cucumber Android Project"
+  "build": "build-1"
+
+
+browser_caps:
+  -
+    "platformName": "Android"
+    "platformVersion": "9"
+    "deviceName": "Galaxy S8 Plus"
+    "app": "YOUR_APP_URL"
+    "name": "first_test"
+    "isRealMobile": "true"
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info Note:**
+
+- You must add the generated **APP_URL** to the `"app"` capability in the config file.
+- You can generate capabilities for your test requirements with the help of our inbuilt **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/).
+
+### Executing The Tests
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+If you are using an **iOS** app, the cURL command will generate an app URL for the corresponding iOS app and install the same for running the tests. You can either use our sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa) or upload your own app as discussed earlier.
+
+**Step-5:** Navigate to the corresponding directory based on your app.
+
+```bash
+cd ios
+```
+
+**Step-6:** Execute the following command to run your test on LambdaTest platform:
+
+```bash
+bundle exec rake first
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+If you are using an **android** app, the cURL command will generate an app URL for the corresponding Android app and install the same for running the tests. You can either use our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or upload your own app as discussed earlier.
+
+**Step-5:** Navigate to the corresponding directory based on your app.
+
+```bash
+cd android
+```
+
+**Step-6:** Execute the following command to run your test on LambdaTest platform:
+
+```bash
+bundle exec rake first
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info:** Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
+
+## Additional Links
+
+- [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
+- [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
+- [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
+
+# 5. PHP With Appium
+# Tutorial To Run Your First Test On LambdaTest
+
+In this topic, you will learn how to configure and run your **PHP** automation testing scripts with **Appium** on **LambdaTest Real Device Cloud platform**.
+
+## Objective
+
+By the end of this topic, you will be able to:
+
+1. Run a sample automation script of **PHP** for application testing with **Appium** on **LambdaTest**.
+2. Learn more about Desired Capabilities for Appium testing.
+3. Explore advanced features of LambdaTest.
+
+**Sample Repo:** All the code samples in this documentation can be found in the :link: [LambdaTest's Repository on GitHub](https://github.com/LambdaTest/LT-appium-php). You can either download or clone the repository to quickly run your tests.
+
+## Pre-requisites
+
+Before you begin automation testing with Selenium, you would need to follow these steps:
+
+### Clone The Sample Project
+
+**Step-1:** Clone the LambdaTest’s :link: [LT-appium-php](https://github.com/LambdaTest/LT-appium-php) repository and navigate to the code directory as shown below:
+
+```bash
+git clone https://github.com/LambdaTest/LT-appium-php
+cd LT-appium-php
+```
+
+### Installing Project Dependencies
+
+<details>
+
+<summary id="summary_2"> <strong>Install PHP (latest)</strong> </summary>
+
+**Step-2:** Download and install the latest version of PHP in your system.
+
+**MacOS:** Previous versions of **MacOS** have **PHP** installed by default. But for the latest **MacOS** versions starting with **Monterey**, **PHP** has to be downloaded and installed manually by using below commands:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew install php
+```
+
+**Windows:**
+
+```bash
+sudo apt-get install curl libcurl3 libcurl3-dev php
+```
+
+:::tip
+For **Windows**, you can download **PHP** from [here](http://windows.php.net/download/). Also, refer to this [documentation](http://php.net/manual/en/install.windows.php) for ensuring the accessibility of PHP through Command Prompt(cmd).
+:::
+
+</details>
+
+<details>
+
+<summary id="summary_2"> <strong>Download Composer in the project directory</strong>
+</summary>
+
+**Step-3:** Download **composer** in the project directory from here ([Linux/MacOS](https://getcomposer.org/download/), [Windows](https://getcomposer.org/doc/00-intro.md#installation-windows)).
+
+:::tip note
+
+To use the **composer** command directly, it either should have been downloaded in the project directory or should be accessible globally which can be done by the command below:
+
+```bash
+mv composer.phar /usr/local/bin/composer
+```
+
+:::
+
+Install the composer dependencies in the current project directory using the command below:
+
+```php
+composer install
+```
+
+</details>
+
+### Setting Up Your Authentication
+
+Make sure you have your LambdaTest credentials with you to run test automation scripts on LambdaTest. To obtain your access credentials, [purchase a plan](https://billing.lambdatest.com/billing/plans) or access the [Automation Dashboard](https://appautomation.lambdatest.com/).
+
+**Step-4:** Set LambdaTest `Username` and `Access Key` in environment variables.
+
+**For Linux/macOS:**
+
+  {`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
+export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+ 
+ **For Windows:**
+ 
+  {`set LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \`
+set LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+  
+### Upload Your Application
+
+**Step-5:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
+
+**Using App File:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
+`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
+
+**Using App URL:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
+
+**Tip:**
+
+- If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
+- Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
+
+## Run Your First Test
+
+### Sample Test With PHP
+
+To get started, here is an example of sample test on our sample Android App shown below.
+
+```php title="AndroidApp.php"
+<?php
+    require __dir__.'/vendor/autoload.php';
+    use Facebook\WebDriver\Remote\DesiredCapabilities;
+    use Facebook\WebDriver\Remote\RemoteWebDriver;
+    use Facebook\WebDriver\WebDriverBy;
+
+    $caps = array(
+        "app"=>"{app_url}",
+        "deviceName" => "Galaxy S20",
+        "platformName" => "Android",
+        "platformVersion" => "10",
+        "isRealMobile" => TRUE,
+        "visual" => TRUE,
+        "video" => TRUE,
+        "name" => "Android app automation php test"
+    );
+
+    $username = getenv("LT_USERNAME") ? getenv("LT_USERNAME") : "{username}";
+    $accesskey = getenv("LT_ACCESS_KEY") ? getenv("LT_ACCESS_KEY") : "{accesskey}"
+
+    $driver = RemoteWebDriver::create("https://$username:$accesskey@beta-hub.lambdatest.com/wd/hub",$caps);
+
+ try{
+    //$color_element = $driver->findElement($this->using('id')->value('color'));//->(WebDriverBy::id('color'));
+    $color_element = $driver->findElement(WebDriverBy::id('color'));
+    $color_element->click();
+
+    $text_element = $driver->findElement(WebDriverBy::id('Text'));
+    $text_element->click();
+
+    $toast_element = $driver->findElement(WebDriverBy::id('toast'));
+    $toast_element->click();
+
+    $notification_element = $driver->findElement(WebDriverBy::id('notification'));
+    $notification_element->click();
+
+    $geoLocation_element = $driver->findElement(WebDriverBy::id('geoLocation'));
+    $geoLocation_element->click();
+
+    $buttonPage_element = $driver->findElement(WebDriverBy::id('buttonPage'));
+    $buttonPage_element->click();
+
+    $webview_element = $driver->findElement(WebDriverBy::id('webview'));
+    $webview_element->click();
+
+    $url_element = $driver->findElement(WebDriverBy::id('url'));
+    $url_element->sendkeys("https://www.lambdatest.com");
+
+    $find_element = $driver->findElement(WebDriverBy::id('find'));
+    $find_element->click();
+
+    $driver->quit();
+ } finally {
+    $driver->quit();
+ }
+
+?>
+```
+
+### Configuring Your Test Capabilities
+
+**Step-6:** You can update your custom capabilities in test scripts. In this sample project, we are passing platform name, platform version, device name and app url (generated earlier) along with other capabilities like build name and test name via capabilities object. The capabilities object in the sample code are defined as:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios-config" label="iOS" default>
+
+```csharp title="iOS(.ipa)"
+  $caps = array(
+    "app"=>"lt://", // Enter app_url here
+    "deviceName"=>"iPhone 11",
+    "platformVersion"=>"14",
+    "platformName"=>"ios",
+    "isRealMobile"=>true,
+    "video"=>true,
+    "visual"=>true,
+    "name"=>"Php - iOS test",
+    "build" => "Php Vanilla - iOS"
+ );
+```
+
+</TabItem>
+<TabItem value="android-config" label="Android" default>
+
+```php title="Android(.apk)"
+  $caps = array(
+        "app"=>"lt://", //Enter app_url here
+        "deviceName" => "Galaxy S20",
+        "platformName" => "Android",
+        "platformVersion" => "10",
+        "isRealMobile" => TRUE,
+        "visual" => TRUE,
+        "video" => TRUE,
+        "name" => "Php - Android test",
+        "build" => "Php Vanilla - Android"
+    );
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info Note:**
+
+- You must add the generated **APP_URL** to the `"app"` capability in the config file.
+- You can generate capabilities for your test requirements with the help of our inbuilt **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/).
+
+### Executing The Tests
+
+**Step-7:** Execute the following command to run your test on LambdaTest platform:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+```bash
+php IOSApp.php
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+```bash
+php AndroidApp.php
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info:** Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
+
+## Additional Links
+
+- [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
+- [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
+- [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
+
+# 6. C# With Appium
+# Tutorial To Run Your First Test On LambdaTest
+
+In this topic, you will learn how to configure and run your **WebDriverIO** automation testing scripts with **Appium** on **LambdaTest Real Device Cloud platform**.
+
+## Objective
+
+By the end of this topic, you will be able to:
+
+1. Run a sample automation script of **WebDriverIO** for application testing with **Appium** on **LambdaTest**.
+2. Run test cases in **parallel** using WebDriverIO with Appium to reduce build times.
+3. Learn more about Desired Capabilities for Appium testing.
+4. Explore advanced features of LambdaTest.
+
+**Sample Repo:** All the code samples in this documentation can be found in the :link: [LambdaTest's Repository on GitHub](https://github.com/LambdaTest/LT-appium-nodejs-webdriverio). You can either download or clone the repository to quickly run your tests.
+
+## Pre-requisites
+
+Before you can start performing App automation testing with Appium, you have to set up Visual Studio:
+
+<img loading="lazy" src={require('../assets/images/app-automation/csharp-1.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
+
+- Clone/Download the Github Repository.
+
+- Open the Android/iOS project using the file with a .sln extension.
+
+### Setting Up Your Authentication
+
+Make sure you have your LambdaTest credentials with you to run test automation scripts on LambdaTest. To obtain your access credentials, [purchase a plan](https://billing.lambdatest.com/billing/plans) or access the [Automation Dashboard](https://appautomation.lambdatest.com/).
+
+**Step-2:** Set LambdaTest `Username` and `Access Key` in environment variables.
+
+**For Linux/macOS:**
+
+  {`export LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \\
+export LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+  
+**For Windows:**
+
+  {`set LT_USERNAME="${ YOUR_LAMBDATEST_USERNAME()}" \`
+set LT_ACCESS_KEY="${ YOUR_LAMBDATEST_ACCESS_KEY()}`}"
+ 
+### Upload Your Application
+
+**Step-3:** Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk file) to the LambdaTest servers using our **REST API**. You need to provide your **Username** and **AccessKey** in the format `Username:AccessKey` in the **cURL** command for authentication. Make sure to add the path of the **appFile** in the cURL request. Here is an example cURL request to upload your app using our REST API:
+
+**Using App File:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'appFile=@"/Users/macuser/Downloads/proverbial_android.apk"' 
+`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/macuser/Downloads/proverbial_android.apk""`}
+
+**Using App URL:**
+
+**For Linux/macOS:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" \\
+--location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \\
+--form 'name="Android_App"' \\
+--form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'`}
+
+**For Windows:**
+
+{`curl -u "${ YOUR_LAMBDATEST_USERNAME()}:${ YOUR_LAMBDATEST_ACCESS_KEY()}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -d "{\"url\":\"https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk\",\"name\":\"sample.apk\"}"`}
+
+**Tip:**
+
+- If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
+- Response of above cURL will be a **JSON** object containing the `App URL` of the format - <lt://APP123456789123456789> and will be used in the next step.
+
+## Run Your Sample Test
+
+### Sample Test With CSharp
+
+An automation script for the sample application available above has been provided here. Ensure to update the `app_url` in the below script before running the test.
+
+<Tabs className="docs__val">
+
+<TabItem value="ios" label="iOS" default>
+
+```csharp
+using System;
+using OpenQA.Selenium.Appium;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Appium.iOS;
+using System.Threading;
+
+namespace csharp_appium_first
+
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            AppiumOptions caps = new AppiumOptions();
+
+
+            // Set your BrowserStack access credentials
+            caps.AddAdditionalCapability("LT_USERNAME", "Your_Username"); //Enter the Username here
+            caps.AddAdditionalCapability("LT_ACCESSKEY", "Your_AccessKey");  //Enter the Access key here
+
+            // Set URL of the application under test
+            caps.AddAdditionalCapability("app", "LT_App"); //Enter the App URL here.
+
+            // Specify device and os_version
+            caps.AddAdditionalCapability("deviceName", "iPhone 12"); //Change the device name here
+            caps.AddAdditionalCapability("platformVersion", "15");
+            caps.AddAdditionalCapability("platformName", "iOS");
+            caps.AddAdditionalCapability("isRealMobile", true);
+            caps.AddAdditionalCapability("network", true);
+
+            // Specify the platformName
+            //caps.PlatformName = "iOS";
+
+            // Set other BrowserStack capabilities
+            caps.AddAdditionalCapability("project", "First CSharp project");
+            caps.AddAdditionalCapability("build", "CSharp iOS");
+            caps.AddAdditionalCapability("name", "first_test");
+
+            // Initialize the remote Webdriver using LambdaTest remote URL
+            // and desired capabilities defined above
+            IOSDriver<IOSElement> driver = new IOSDriver<IOSElement>(
+                new Uri("https://beta-hub.lambdatest.com/wd/hub"), caps);
+
+            // Test case for the sample iOS app.
+            // If you have uploaded your app, update the test case here.
+            IOSElement color = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("color"))
+            );
+            color.Click();
+            color.Click();
+
+            IOSElement text = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("Text"))
+            );
+            text.Click();
+
+            IOSElement toast = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("toast"))
+            );
+            toast.Click();
+
+            IOSElement nf = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("notification"))
+            );
+            nf.Click();
+
+            IOSElement gl = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("geoLocation"))
+            );
+            gl.Click();
+
+            Thread.Sleep(5000);
+
+            driver.Navigate().Back();
+
+            IOSElement st = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("speedTest"))
+            );
+            st.Click();
+
+            Thread.Sleep(5000);
+
+            driver.Navigate().Back();
+
+            IOSElement browser = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Browser"))
+            );
+            browser.Click();
+
+            IOSElement inputBox = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("url"))
+            );
+            inputBox.Click();
+
+
+            driver.Quit();
+
+        }
+    }
+}
+```
+
+</TabItem>
+
+<TabItem value="android" label="Android" default>
+
+```csharp
+using System;
+using OpenQA.Selenium.Appium;
+using OpenQA.Selenium.Support.UI;
+using OpenQA.Selenium.Appium.iOS;
+using System.Threading;
+
+namespace csharp_appium
+
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            AppiumOptions caps = new AppiumOptions();
+
+            caps.AddAdditionalCapability("LT_USERNAME", "LT_USERNAME");  //Add the LT Username
+            caps.AddAdditionalCapability("LT_ACCESS_KEY", "LT_ACCESS_KEY");  //Add the LT Access key
+
+            // Set URL of the application under test
+            caps.AddAdditionalCapability("app", "App_ID"); //Add the App ID
+
+            // Specify device and os_version
+            caps.AddAdditionalCapability("deviceName", "Galaxy S21 Ultra 5G");  //Add the Device Details
+            caps.AddAdditionalCapability("platformVersion", "11");
+            caps.AddAdditionalCapability("platformName", "Android");
+            caps.AddAdditionalCapability("isRealMobile", true);
+            caps.AddAdditionalCapability("network", true);
+
+            caps.AddAdditionalCapability("project", "CSharp Sample Android");
+            caps.AddAdditionalCapability("build", "CSharp Sample Android");
+            caps.AddAdditionalCapability("name", "CSharp Sample Android");
+
+            // Initialize the remote Webdriver using LambdaTest remote URL
+            // and desired capabilities defined above
+            IOSDriver<IOSElement> driver = new IOSDriver<IOSElement>(
+                new Uri("https://beta-hub.lambdatest.com/wd/hub"), caps);
+
+            // Test case for the sample iOS app.
+            // If you have uploaded your app, update the test case here.
+            IOSElement color = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("color"))
+            );
+            color.Click();
+            color.Click();
+
+            IOSElement text = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("Text"))
+            );
+            text.Click();
+
+            IOSElement toast = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("toast"))
+            );
+            toast.Click();
+
+            IOSElement nf = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("notification"))
+            );
+            nf.Click();
+
+            IOSElement gl = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("geoLocation"))
+            );
+            gl.Click();
+
+            Thread.Sleep(5000);
+
+            driver.Navigate().Back();
+
+            IOSElement st = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("speedTest"))
+            );
+            st.Click();
+
+            Thread.Sleep(5000);
+
+            driver.Navigate().Back();
+
+            IOSElement browser = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.AccessibilityId("Browser"))
+            );
+            browser.Click();
+
+            IOSElement inputBox = (IOSElement)new WebDriverWait(driver, TimeSpan.FromSeconds(30)).Until(
+                SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(MobileBy.Id("url"))
+            );
+            inputBox.Click();
+
+
+            driver.Quit();
+        }
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+### Configuring Your Test Capabilities
+
+**Step-4:** You can update your custom capabilities in test scripts. In this sample project, we are passing platform name, platform version, device name and app url (generated earlier) along with other capabilities like build name and test name via capabilities object. The capabilities object in the sample code are defined as:
+
+<Tabs className="docs__val">
+
+<TabItem value="ios-config" label="iOS" default>
+
+```csharp title="iOS(.ipa)"
+  DesiredCapabilities capabilities = new DesiredCapabilities();
+	capabilities.setCapability("build", "your build name");
+	capabilities.setCapability("name", "your test name");
+	capabilities.setCapability("platformName", "iOS");
+	capabilities.setCapability("deviceName", "iPhone 13 Pro");
+	capabilities.setCapability("isRealMobile", true);
+	capabilities.setCapability("platformVersion","15.0");
+	capabilities.setCapability("Visual", true);
+	capabilities.setCapability("Console", true);
+	capabilities.setCapability("Network", true);
+
+```
+
+</TabItem>
+<TabItem value="android-config" label="Android" default>
+
+```csharp title="Android(.apk)"
+  DesiredCapabilities capabilities = new DesiredCapabilities();
+	capabilities.setCapability("build", "your build name");
+	capabilities.setCapability("name", "your test name");
+	capabilities.setCapability("platformName", "Android");
+	capabilities.setCapability("deviceName", "Galaxy S20");
+	capabilities.setCapability("isRealMobile", true);
+	capabilities.setCapability("platformVersion","11");
+	capabilities.setCapability("Visual", true);
+	capabilities.setCapability("Console", true);
+	capabilities.setCapability("Network", true);
+
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+**Info Note:**
+
+- You must add the generated **APP_URL** to the `"app"` capability in the config file.
+- You can generate capabilities for your test requirements with the help of our inbuilt **[Capabilities Generator tool](https://www.lambdatest.com/capabilities-generator/beta/index.html)**. A more Detailed Capability Guide is available [here](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/).
+
+### Executing The Tests
+
+Click the **Play** icon to run the test.
+
+<img loading="lazy" src={require('../assets/images/app-automation/csharp-2.png').default} alt="Image" width="1366" height="625" className="doc_img"/>
+
+**Info:** Your test results would be displayed on the test console (or command-line interface if you are using terminal/cmd) and on the :link: [LambdaTest App Automation Dashboard](https://appautomation.lambdatest.com/build).
+
+## Additional Links
+
+- [Advanced Configuration for Capabilities](https://www.lambdatest.com/support/docs/desired-capabilities-in-appium/)
+- [How to test locally hosted apps](https://www.lambdatest.com/support/docs/testing-locally-hosted-pages/)
+- [How to integrate LambdaTest with CI/CD](https://www.lambdatest.com/support/docs/integrations-with-ci-cd-tools/)
