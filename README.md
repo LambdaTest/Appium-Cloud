@@ -40,6 +40,19 @@
 
 **Tip:** If you do not have any **.apk** or **.ipa** file, you can run your sample tests on LambdaTest by using our sample :link: [Android app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk) or sample :link: [iOS app](https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_ios.ipa).
 
+# Languages And Frameworks 
+
+Here is a list of languages and frameworks that are supported by the LambdaTest to run Appium automation tests on [LambdaTest Real Device Cloud Platform](https://www.lambdatest.com/real-device-cloud).
+
+| Java | PHP | Ruby | C# | Python | JavaScript |
+| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
+| [JUnit](https://github.com/LambdaTest/LT-appium-java-junit) | [PHP](https://github.com/LambdaTest/LT-appium-php) | [Cucumber](https://github.com/LambdaTest/LT-appium-ruby-cucumber) | [C#](https://github.com/LambdaTest/LT-appium-CSharp) | [Behave](https://github.com/LambdaTest/LT-appium-python-behave) | [WebdriverIO](https://github.com/LambdaTest/LT-appium-nodejs-webdriverio) |
+|   |   |   |   | [Robot](https://github.com/LambdaTest/LT-appium-python-robot) |   | 
+
+We support all languages and frameworks that are compatible with Appium, so in case your favorite isn't in the table. Don't worry, you can still run the test. **[Contact Us](https://www.lambdatest.com/contact-us)** for any help.
+
+**Note:** We are preparing documentation for more frameworks. If you want us to prioritize documentation of your preferred framework then feel free to give us a **shout**.
+
 ## Run Your First Test
 
 ### **Upload Your Application**
@@ -427,19 +440,6 @@ Sample Capabilities for both android and iOS are mentioned below -
 ## Additional Capability Reference Guide
 
 - A more Detailed Capability Guide (PDF) is available [here](https://prod-mobile-artefacts.lambdatest.com/assets/docs/LambdaTest+App+Automation+Capability+Reference+Guide.pdf).
-
-# Languages And Frameworks 
-
-Here is a list of languages and frameworks that are supported by the LambdaTest to run Appium automation tests on [LambdaTest Real Device Cloud Platform](https://www.lambdatest.com/real-device-cloud).
-
-| Java | PHP | Ruby | C# | Python | JavaScript |
-| ------------- | ------------- | ------------- | ------------- | ------------- | ------------- |
-| [JUnit](https://github.com/LambdaTest/LT-appium-java-junit) | [PHP](https://github.com/LambdaTest/LT-appium-php) | [Cucumber](https://github.com/LambdaTest/LT-appium-ruby-cucumber) | [C#](https://github.com/LambdaTest/LT-appium-CSharp) | [Behave](https://github.com/LambdaTest/LT-appium-python-behave) | [WebdriverIO](https://github.com/LambdaTest/LT-appium-nodejs-webdriverio) |
-|   |   |   |   | [Robot](https://github.com/LambdaTest/LT-appium-python-robot) |   | 
-
-We support all languages and frameworks that are compatible with Appium, so in case your favorite isn't in the table. Don't worry, you can still run the test. **[Contact Us](https://www.lambdatest.com/contact-us)** for any help.
-
-**Note:** We are preparing documentation for more frameworks. If you want us to prioritize documentation of your preferred framework then feel free to give us a **shout**.
 
 # Desired Capabilities In Appium
 
