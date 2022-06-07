@@ -62,16 +62,16 @@ Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk
 **For macOS/Linux:**
 
 ```js
-curl -u "shantanuw:abcdefghijklmnopqrstuvwxyz" \
+curl -u "{username}:{accesskey}" \
 --location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \
 --form 'name="Android_App"' \
---form 'appFile=@"/Users/shantanuwali/Desktop/LT_Java_Appium/proverbial_android.apk"'
+--form 'appFile=@"/Users/{desktop_username}/Desktop/LT_Java_Appium/proverbial_android.apk"'
 ```
 
 **For Windows:**
 
 ```js
-curl -u "shantanuw:abcdefghijklmnopqrstuvwxyz" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/shantanuwali/Desktop/LT_Java_Appium/proverbial_android.apk""
+curl -u "{username}:{accesskey}" -X POST "https://manual-api.lambdatest.com/app/upload/realDevice" -F "appFile=@"/Users/Desktop_username/Desktop/LT_Java_Appium/proverbial_android.apk""
 ```
 
 **Using App URL:**
@@ -544,7 +544,7 @@ Upload your **_iOS_** application (.ipa file) or **_android_** application (.apk
 
 **For iOS:**
 ```js
-curl -u "shantanuw:abcdefghijklmnopqrstuvwxyz" \
+curl -u "{usename}:{accesskey}" \
 --location --request POST 'https://manual-api.lambdatest.com/app/upload/realDevice' \
 --form 'name="Android_App"' \
 --form 'url="https://prod-mobile-artefacts.lambdatest.com/assets/docs/proverbial_android.apk"'
