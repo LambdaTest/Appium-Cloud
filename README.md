@@ -1,7 +1,7 @@
 # Appium Testing On LambdaTest
 
 <p align="center">
-<img height="500" src="https://user-images.githubusercontent.com/95698164/171945587-c776c668-8a4e-4d13-bcb5-d8f197f14070.png">
+<img src="https://user-images.githubusercontent.com/95698164/171945587-c776c668-8a4e-4d13-bcb5-d8f197f14070.png">
 </p>
 
 <p align="center">
